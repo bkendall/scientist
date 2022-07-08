@@ -8,7 +8,7 @@ import { create as createResult } from "./result";
 
 const debug = Debug("scientist:experiment");
 
-const isObject = (val: any): boolean => {
+const isObject = (val: unknown): boolean => {
   return (
     typeof val === "object" &&
     val !== undefined &&
@@ -20,19 +20,19 @@ const isObject = (val: any): boolean => {
   );
 };
 
-const isFunction = (f: any): boolean => {
+const isFunction = (f: unknown): boolean => {
   return typeof f === "function";
 };
 
 export class Experiment<V> {
-  private _beforeRunFn?: (...rest: Array<any>) => boolean;
-  private _behaviors: Map<string, (...rest: Array<any>) => V>;
+  private _beforeRunFn?: (...rest: Array<unknown>) => boolean;
+  private _behaviors: Map<string, (...rest: Array<unknown>) => V>;
   private _cleanerFn?: (value: V) => V;
   private _comparator?: (a: Observation<V>, b: Observation<V>) => boolean;
   private _context: unknown;
   private _ignores: List<(control: V, observation: V) => boolean>;
   private _raiseOnMismatches: boolean;
-  private _runIfFn?: (...rest: Array<any>) => boolean;
+  private _runIfFn?: (...rest: Array<unknown>) => boolean;
   enabled: boolean;
   name: string;
 
@@ -101,10 +101,10 @@ export class Experiment<V> {
    * @param {[Object]} context Extra data to add.
    * @return {Object} Extra experiment data.
    */
-  context(context?: any): unknown {
+  context(context?: unknown): unknown {
     debug("context");
     if (context && isObject(context)) {
-      Object.assign(this._context as any, context);
+      this._context = Object.assign({}, this._context, context);
     }
     return this._context;
   }
@@ -169,54 +169,50 @@ export class Experiment<V> {
    * @param {String} name Name of the behavior to run. Default: "control"
    * @return {Object} Result of the control behavior.
    */
-  run(name = "control"): Promise<V> {
+  async run(name = "control"): Promise<V> {
     debug("run");
-    return Promise.resolve().then(() => {
-      const controlFunc = this._behaviors.get(name);
-      if (!isFunction(controlFunc)) {
-        throw new Error(`${name} behavior is missing.`);
+    const controlFunc = this._behaviors.get(name);
+    if (!isFunction(controlFunc)) {
+      throw new Error(`${name} behavior is missing.`);
+    }
+
+    if (controlFunc && !this.shouldExperimentRun()) {
+      return controlFunc();
+    }
+
+    if (this._beforeRunFn && isFunction(this._beforeRunFn)) {
+      this._beforeRunFn();
+    }
+
+    const promises: Promise<Observation<V>>[] = [];
+
+    const shuffle = KnuthShuffle.knuthShuffle;
+    shuffle(this._behaviors.keySeq().toArray()).forEach((key) => {
+      const fn = this._behaviors.get(key);
+      if (!fn) {
+        throw new Error("Cannot create observation without fn");
       }
-
-      if (controlFunc && !this.shouldExperimentRun()) {
-        return controlFunc();
-      }
-
-      return Promise.resolve()
-        .then(() => {
-          if (this._beforeRunFn && isFunction(this._beforeRunFn)) {
-            return this._beforeRunFn();
-          }
-        })
-        .then(() => {
-          const promises: Promise<Observation<V>>[] = [];
-
-          const shuffle = KnuthShuffle.knuthShuffle;
-          shuffle(this._behaviors.keySeq().toArray()).forEach((key: any) => {
-            const fn = this._behaviors.get(key);
-            promises.push(createObservation(key, this, fn!));
-          });
-
-          return Promise.all(promises);
-        })
-        .then((observations: Observation<V>[]) => {
-          const control: any = observations.find((o) => o.name === name);
-          if (!control) {
-            throw new Error(`Could not find control observation (${name})`);
-          }
-          const result = createResult(this, observations, control);
-
-          return this.publish(result).then(() => {
-            if (this.raiseOnMismatches() && result.mismatched()) {
-              throw new MismatchError(name, result);
-            }
-            if (control.raised()) {
-              throw control.exception;
-            } else {
-              return control.value;
-            }
-          });
-        });
+      promises.push(createObservation(key, this, fn));
     });
+
+    const observations = await Promise.all(promises);
+
+    const control = observations.find((o) => o.name === name);
+    if (!control) {
+      throw new Error(`Could not find control observation (${name})`);
+    }
+    const result = createResult(this, observations, control);
+
+    await this.publish(result);
+
+    if (this.raiseOnMismatches() && result.mismatched()) {
+      throw new MismatchError(name, result);
+    }
+    if (control.raised()) {
+      throw control.exception;
+    } else {
+      return control.value as V;
+    }
   }
 
   /**
@@ -270,7 +266,10 @@ export class Experiment<V> {
     if (typeof fn !== "function") {
       throw new Error(".try: Function is not a function.");
     }
-    this._behaviors = this._behaviors.set(name, fn as (...rest: any[]) => V);
+    this._behaviors = this._behaviors.set(
+      name,
+      fn as (...rest: unknown[]) => V
+    );
   }
 
   use(fn: () => unknown): void {

@@ -4,16 +4,12 @@ chai.use(chaiAsPromised);
 const assert = chai.assert;
 
 import * as sinon from "sinon";
-import * as KnuthShuffle from "knuth-shuffle";
 
-import { MismatchError } from "./errors/mismatch-error";
-import { Observation, create as createObservation } from "./observation";
-import { Result, create as createResult } from "./result";
-
+import { Observation } from "./observation";
 import { Experiment } from "./experiment";
 
 describe("Experiment", function () {
-  let experiment: Experiment<any>;
+  let experiment: Experiment<string>;
 
   beforeEach(function () {
     experiment = new Experiment();
@@ -47,7 +43,7 @@ describe("Experiment", function () {
   describe("clean", function () {
     it("should set the internal cleaner function", function () {
       function fn() {
-        return;
+        return "true";
       }
       experiment.clean(fn);
       // assert.deepEqual(experiment._cleanerFn, fn);
@@ -113,8 +109,8 @@ describe("Experiment", function () {
     describe("with ignore functions", function () {
       let fail: sinon.SinonStub;
       let pass: sinon.SinonStub;
-      const control = { value: 1 } as Observation<number>;
-      const candidate = { value: 2 } as Observation<number>;
+      const control = { value: "1" } as Observation<string>;
+      const candidate = { value: "2" } as Observation<string>;
       beforeEach(function () {
         // order is important here, because Array.prototype.some
         fail = sinon.stub().returns(false);
@@ -126,9 +122,9 @@ describe("Experiment", function () {
       it("should run each ignore function with the values", function () {
         experiment.ignoreMismatchedObservation(control, candidate);
         sinon.assert.calledOnce(fail);
-        sinon.assert.calledWithExactly(fail, 1, 2);
+        sinon.assert.calledWithExactly(fail, "1", "2");
         sinon.assert.calledOnce(pass);
-        sinon.assert.calledWithExactly(pass, 1, 2);
+        sinon.assert.calledWithExactly(pass, "1", "2");
       });
 
       it("should return true if any ignore is truthy", function () {
@@ -145,8 +141,8 @@ describe("Experiment", function () {
   });
 
   describe("observationsAreEquivalent", function () {
-    const control = { value: 1 } as Observation<number>;
-    const candidate = { value: 2 } as Observation<number>;
+    const control = { value: "1" } as Observation<string>;
+    const candidate = { value: "2" } as Observation<string>;
 
     describe("with a comparator", function () {
       let fn: sinon.SinonStub;
@@ -323,195 +319,195 @@ describe("Experiment", function () {
     });
   });
 
-  describe("run", function () {
-    // it("should throw an error if control behavior is missing", function () {
-    //   return assert.isRejected(experiment.run(), Error, /control.+missing/);
-    // });
+  // describe("run", function () {
+  //   it("should throw an error if control behavior is missing", function () {
+  //     return assert.isRejected(experiment.run(), Error, /control.+missing/);
+  //   });
 
-    describe.skip("with behaviors", function () {
-      let observations: Observation<any>[];
-      const mockResult = {};
-      beforeEach(function () {
-        observations = [];
-        experiment.use(sinon.stub().returns(Promise.resolve(5))); // control
-        experiment.try(sinon.stub().returns(Promise.resolve(6))); // candidate
-        sinon
-          .stub(Experiment.prototype, "publish")
-          .returns(Promise.resolve(true));
-        sinon.stub(Experiment.prototype, "shouldExperimentRun").returns(true);
-        // sinon.stub(Observation, "create", function (key, experiment, fn) {
-        //   let e;
-        //   return Promise.resolve()
-        //     .then(function () {
-        //       return fn();
-        //     })
-        //     .catch(function (err) {
-        //       e = err;
-        //     })
-        //     .then(function (value) {
-        //       const o = {
-        //         raised: sinon.stub().returns(!!e),
-        //         name: key,
-        //         value: value,
-        //         exception: e,
-        //       };
-        //       observations.push(o);
-        //       return o;
-        //     });
-        // });
-        // mockResult.mismatched = sinon.stub().returns(false);
-        // sinon.stub(Result, "create").returns(mockResult);
-        sinon.spy(KnuthShuffle, "knuthShuffle");
-      });
+  //   describe("with behaviors", function () {
+  //     let observations: Observation<any>[];
+  //     const mockResult = {};
+  //     beforeEach(function () {
+  //       observations = [];
+  //       experiment.use(sinon.stub().returns(Promise.resolve(5))); // control
+  //       experiment.try(sinon.stub().returns(Promise.resolve(6))); // candidate
+  //       sinon
+  //         .stub(Experiment.prototype, "publish")
+  //         .returns(Promise.resolve(true));
+  //       sinon.stub(Experiment.prototype, "shouldExperimentRun").returns(true);
+  //       sinon.stub(Observation, "create", function (key, experiment, fn) {
+  //         let e;
+  //         return Promise.resolve()
+  //           .then(function () {
+  //             return fn();
+  //           })
+  //           .catch(function (err) {
+  //             e = err;
+  //           })
+  //           .then(function (value) {
+  //             const o = {
+  //               raised: sinon.stub().returns(!!e),
+  //               name: key,
+  //               value: value,
+  //               exception: e,
+  //             };
+  //             observations.push(o);
+  //             return o;
+  //           });
+  //       });
+  //       mockResult.mismatched = sinon.stub().returns(false);
+  //       sinon.stub(Result, "create").returns(mockResult);
+  //       sinon.spy(KnuthShuffle, "knuthShuffle");
+  //     });
 
-      afterEach(function () {
-        // Experiment.prototype.publish.restore();
-        // Experiment.prototype.shouldExperimentRun.restore();
-        // createObservation.restore();
-        // createResult.restore();
-        // KnuthShuffle.knuthShuffle.restore();
-      });
+  //     afterEach(function () {
+  //       Experiment.prototype.publish.restore();
+  //       Experiment.prototype.shouldExperimentRun.restore();
+  //       createObservation.restore();
+  //       createResult.restore();
+  //       KnuthShuffle.knuthShuffle.restore();
+  //     });
 
-      // it("should reject with an error if the specified control is missing", function () {
-      //   return assert.isRejected(
-      //     experiment.run("nope"),
-      //     Error,
-      //     /nope.+missing/i
-      //   );
-      // });
+  //     it("should reject with an error if the specified control is missing", function () {
+  //       return assert.isRejected(
+  //         experiment.run("nope"),
+  //         Error,
+  //         /nope.+missing/i
+  //       );
+  //     });
 
-      // it("should check if the experiment can be run", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.calledOnce(Experiment.prototype.shouldExperimentRun);
-      //   });
-      // });
+  //     it("should check if the experiment can be run", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.calledOnce(Experiment.prototype.shouldExperimentRun);
+  //       });
+  //     });
 
-      // it("should not run if the experiment should not be run", function () {
-      //   Experiment.prototype.shouldExperimentRun.returns(false);
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.notCalled(KnuthShuffle.knuthShuffle);
-      //   });
-      // });
+  //     it("should not run if the experiment should not be run", function () {
+  //       Experiment.prototype.shouldExperimentRun.returns(false);
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.notCalled(KnuthShuffle.knuthShuffle);
+  //       });
+  //     });
 
-      // describe("with a run_before function", function () {
-      //   let before;
-      //   beforeEach(function () {
-      //     before = sinon.stub().returns(Promise.resolve(true));
-      //     experiment.beforeRun(before);
-      //   });
+  //     describe("with a run_before function", function () {
+  //       let before;
+  //       beforeEach(function () {
+  //         before = sinon.stub().returns(Promise.resolve(true));
+  //         experiment.beforeRun(before);
+  //       });
 
-      //   it("should run the before function", function () {
-      //     return assert.isFulfilled(experiment.run()).then(function () {
-      //       sinon.assert.calledOnce(before);
-      //     });
-      //   });
-      // });
+  //       it("should run the before function", function () {
+  //         return assert.isFulfilled(experiment.run()).then(function () {
+  //           sinon.assert.calledOnce(before);
+  //         });
+  //       });
+  //     });
 
-      // it("should shuffle the behaviors before running them", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.calledOnce(KnuthShuffle.knuthShuffle);
-      //     // the keys will be in a random order, so have to check this way
-      //     const keys = KnuthShuffle.knuthShuffle.firstCall.args[0];
-      //     assert.lengthOf(keys, 2);
-      //     assert.include(keys, "control");
-      //     assert.include(keys, "candidate");
-      //   });
-      // });
+  //     it("should shuffle the behaviors before running them", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.calledOnce(KnuthShuffle.knuthShuffle);
+  //         // the keys will be in a random order, so have to check this way
+  //         const keys = KnuthShuffle.knuthShuffle.firstCall.args[0];
+  //         assert.lengthOf(keys, 2);
+  //         assert.include(keys, "control");
+  //         assert.include(keys, "candidate");
+  //       });
+  //     });
 
-      // it("should create observations for each behavior", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.calledTwice(createObservation);
-      //     sinon.assert.calledWithExactly(
-      //       createObservation,
-      //       "control",
-      //       experiment,
-      //       experiment._behaviors.get("control")
-      //     );
-      //     sinon.assert.calledWithExactly(
-      //       createObservation,
-      //       "candidate",
-      //       experiment,
-      //       experiment._behaviors.get("candidate")
-      //     );
-      //   });
-      // });
+  //     it("should create observations for each behavior", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.calledTwice(createObservation);
+  //         sinon.assert.calledWithExactly(
+  //           createObservation,
+  //           "control",
+  //           experiment,
+  //           experiment._behaviors.get("control")
+  //         );
+  //         sinon.assert.calledWithExactly(
+  //           createObservation,
+  //           "candidate",
+  //           experiment,
+  //           experiment._behaviors.get("candidate")
+  //         );
+  //       });
+  //     });
 
-      // it("should reject if for some reason the control got lost", function () {
-      //   KnuthShuffle.knuthShuffle.restore();
-      //   sinon.stub(KnuthShuffle, "knuthShuffle").returns([]);
-      //   return assert.isRejected(
-      //     experiment.run(),
-      //     Error,
-      //     /could not find control observation/i
-      //   );
-      // });
+  //     it("should reject if for some reason the control got lost", function () {
+  //       KnuthShuffle.knuthShuffle.restore();
+  //       sinon.stub(KnuthShuffle, "knuthShuffle").returns([]);
+  //       return assert.isRejected(
+  //         experiment.run(),
+  //         Error,
+  //         /could not find control observation/i
+  //       );
+  //     });
 
-      // it("should run each of the behaviors", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.calledOnce(experiment._behaviors.get("control"));
-      //     sinon.assert.calledOnce(experiment._behaviors.get("candidate"));
-      //   });
-      // });
+  //     it("should run each of the behaviors", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.calledOnce(experiment._behaviors.get("control"));
+  //         sinon.assert.calledOnce(experiment._behaviors.get("candidate"));
+  //       });
+  //     });
 
-      // it("should create a result object with the observations", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     const control = observations.find((c) => c.name === "control");
-      //     sinon.assert.calledOnce(createResult);
-      //     sinon.assert.calledWithExactly(
-      //       createResult,
-      //       experiment,
-      //       observations,
-      //       control
-      //     );
-      //   });
-      // });
+  //     it("should create a result object with the observations", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         const control = observations.find((c) => c.name === "control");
+  //         sinon.assert.calledOnce(createResult);
+  //         sinon.assert.calledWithExactly(
+  //           createResult,
+  //           experiment,
+  //           observations,
+  //           control
+  //         );
+  //       });
+  //     });
 
-      // it("should publish the result", function () {
-      //   return assert.isFulfilled(experiment.run()).then(function () {
-      //     sinon.assert.calledOnce(Experiment.prototype.publish);
-      //     sinon.assert.calledWithExactly(
-      //       Experiment.prototype.publish,
-      //       mockResult
-      //     );
-      //   });
-      // });
+  //     it("should publish the result", function () {
+  //       return assert.isFulfilled(experiment.run()).then(function () {
+  //         sinon.assert.calledOnce(Experiment.prototype.publish);
+  //         sinon.assert.calledWithExactly(
+  //           Experiment.prototype.publish,
+  //           mockResult
+  //         );
+  //       });
+  //     });
 
-      // describe("if raising on mismatches", function () {
-      //   beforeEach(function () {
-      //     experiment._raiseOnMismatches = true;
-      //   });
+  //     describe("if raising on mismatches", function () {
+  //       beforeEach(function () {
+  //         experiment._raiseOnMismatches = true;
+  //       });
 
-      //   it("should throw a MismatchError if a result mismatched", function () {
-      //     mockResult.mismatched.returns(true);
-      //     return assert.isRejected(experiment.run(), MismatchError, "control");
-      //   });
+  //       it("should throw a MismatchError if a result mismatched", function () {
+  //         mockResult.mismatched.returns(true);
+  //         return assert.isRejected(experiment.run(), MismatchError, "control");
+  //       });
 
-      //   it("should not throw if a result is not mismatched", function () {
-      //     return assert.isFulfilled(experiment.run());
-      //   });
-      // });
+  //       it("should not throw if a result is not mismatched", function () {
+  //         return assert.isFulfilled(experiment.run());
+  //       });
+  //     });
 
-      // describe("if the control raised", function () {
-      //   beforeEach(function () {
-      //     const error = new Error("ponos");
-      //     experiment._behaviors = experiment._behaviors.set(
-      //       "control",
-      //       sinon.stub().returns(Promise.reject(error))
-      //     );
-      //   });
+  //     describe("if the control raised", function () {
+  //       beforeEach(function () {
+  //         const error = new Error("ponos");
+  //         experiment._behaviors = experiment._behaviors.set(
+  //           "control",
+  //           sinon.stub().returns(Promise.reject(error))
+  //         );
+  //       });
 
-      //   it("should throw the exception again", function () {
-      //     return assert.isRejected(experiment.run(), Error, "ponos");
-      //   });
-      // });
+  //       it("should throw the exception again", function () {
+  //         return assert.isRejected(experiment.run(), Error, "ponos");
+  //       });
+  //     });
 
-      // describe("on a successful control", function () {
-      //   it("should return the control value", function () {
-      //     return assert.isFulfilled(experiment.run()).then(function (value) {
-      //       assert.equal(value, 5);
-      //     });
-      //   });
-      // });
-    });
-  });
+  //     describe("on a successful control", function () {
+  //       it("should return the control value", function () {
+  //         return assert.isFulfilled(experiment.run()).then(function (value) {
+  //           assert.equal(value, 5);
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
 });

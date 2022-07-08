@@ -104,21 +104,21 @@ export class Result<V> {
    */
   evaluateCandidates(): void {
     const mismatched = this.candidates.filter((candidate) => {
-      return !this.experiment.observationsAreEquivalent(
-        this.control,
-        candidate!
+      return (
+        candidate &&
+        !this.experiment.observationsAreEquivalent(this.control, candidate)
       );
     });
 
     mismatched.forEach((candidate) => {
       const ignore = this.experiment.ignoreMismatchedObservation(
         this.control,
-        candidate!
+        candidate
       );
       if (ignore) {
-        this._ignored = this._ignored.push(candidate!);
+        this._ignored = this._ignored.push(candidate);
       } else {
-        this._mismatched = this._mismatched.push(candidate!);
+        this._mismatched = this._mismatched.push(candidate);
       }
     });
   }

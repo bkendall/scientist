@@ -1,9 +1,9 @@
 import { Experiment } from "./experiment";
 
-export function create<V>(
+export async function create<V>(
   name: string,
   experiment: Experiment<V>,
-  fn: (...rest: Array<any>) => Promise<V> | V
+  fn: (...rest: Array<unknown>) => Promise<V> | V
 ): Promise<Observation<V>> {
   const observation = new Observation(name, experiment, fn);
   return Promise.resolve()
@@ -24,7 +24,7 @@ export class Observation<V> {
   duration?: number;
   exception?: Error;
   experiment: Experiment<V>;
-  fn: (...rest: Array<any>) => Promise<V> | V;
+  fn: (...rest: Array<unknown>) => Promise<V> | V;
   name: string;
   now: number;
   value?: V;
@@ -32,7 +32,7 @@ export class Observation<V> {
   constructor(
     name: string,
     experiment: Experiment<V>,
-    fn: (...rest: Array<any>) => Promise<V> | V
+    fn: (...rest: Array<unknown>) => Promise<V> | V
   ) {
     this.name = name;
     this.experiment = experiment;
@@ -71,7 +71,7 @@ export class Observation<V> {
    */
   equivalentTo(
     other: Observation<V>,
-    comparator?: (a: V, b: V) => boolean
+    comparator?: (a?: V, b?: V) => boolean
   ): boolean {
     if (!(other instanceof Observation)) {
       return false;
@@ -83,7 +83,7 @@ export class Observation<V> {
 
     if (neitherRaised) {
       if (typeof comparator === "function") {
-        valuesAreEqual = comparator(this.value!, other.value!);
+        valuesAreEqual = comparator(this.value, other.value);
       } else {
         valuesAreEqual = this.value === other.value;
       }

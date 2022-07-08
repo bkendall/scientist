@@ -139,12 +139,12 @@ describe("Observation", function () {
   });
 
   describe("equivalent_to", function () {
-    let observation: Observation<any>;
-    let equalObservation: Observation<any>;
-    let notEqualObservation: Observation<any>;
-    let throwsObservation: Observation<any>;
-    let equalThrowsObservation: Observation<any>;
-    let notEqualThrowsObservation: Observation<any>;
+    let observation: Observation<unknown>;
+    let equalObservation: Observation<unknown>;
+    let notEqualObservation: Observation<unknown>;
+    let throwsObservation: Observation<unknown>;
+    let equalThrowsObservation: Observation<unknown>;
+    let notEqualThrowsObservation: Observation<unknown>;
     const error = new Error("foobar");
     const otherError = new Error("asdf");
 
@@ -214,15 +214,15 @@ describe("Observation", function () {
 
     it("should return false if passed not an Observation", function () {
       assert.notOk(
-        observation.equivalentTo({} as Observation<any>),
+        observation.equivalentTo({} as Observation<unknown>),
         "object is invalid"
       );
       assert.notOk(
-        observation.equivalentTo("foo" as unknown as Observation<any>),
+        observation.equivalentTo("foo" as unknown as Observation<unknown>),
         "string is invalid"
       );
       assert.notOk(
-        observation.equivalentTo(4 as unknown as Observation<any>),
+        observation.equivalentTo(4 as unknown as Observation<unknown>),
         "number is invalid"
       );
     });

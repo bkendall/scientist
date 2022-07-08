@@ -6,6 +6,7 @@ const assert = chai.assert;
 import * as sinon from "sinon";
 
 import { Experiment, Result } from "../../src";
+import { Observation } from "../../src/observation";
 
 const mockExperiment = new Experiment<unknown>();
 sinon.stub(mockExperiment, "observationsAreEquivalent").returns(false);
@@ -20,15 +21,21 @@ const mockObservationTwo = {
   value: 5,
 };
 
-function clone(o: any): any {
+function clone(o: unknown): unknown {
   return Object.assign({}, o);
 }
 
 describe("Result", function () {
   it("should return equivalent results regardless of order", function () {
-    const o1 = [clone(mockObservationOne), clone(mockObservationTwo)];
+    const o1 = [
+      clone(mockObservationOne),
+      clone(mockObservationTwo),
+    ] as Observation<unknown>[];
     const resultOne = new Result(mockExperiment, o1, o1[0]);
-    const o2 = [clone(mockObservationTwo), clone(mockObservationOne)];
+    const o2 = [
+      clone(mockObservationTwo),
+      clone(mockObservationOne),
+    ] as Observation<unknown>[];
     const resultTwo = new Result(mockExperiment, o2, o2[1]);
 
     assert.ok(resultOne.mismatched());
