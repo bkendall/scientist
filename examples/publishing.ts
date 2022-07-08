@@ -1,5 +1,4 @@
-import { Experiment } from "../src";
-import { Result } from "../src";
+import { Experiment, Result } from "../src";
 
 class MyExperiment<V> extends Experiment<V> {
   constructor(name: string) {
