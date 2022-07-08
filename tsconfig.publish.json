@@ -5,9 +5,5 @@
     "removeComments": true,
     "sourceMap": false
   },
-  "exclude": [
-    "**/*.spec.*",
-    "test/**/*",
-    "examples/**/*"
-  ]
+  "exclude": ["**/*.spec.*", "test/**/*", "examples/**/*"]
 }

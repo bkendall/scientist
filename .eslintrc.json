@@ -4,9 +4,7 @@
     "node": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -17,10 +15,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "test/**/*",
-        "**/*.spec.*"
-      ],
+      "files": ["test/**/*", "**/*.spec.*"],
       "env": {
         "mocha": true
       }
