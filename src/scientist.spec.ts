@@ -13,19 +13,19 @@ class MyExp<T> extends Experiment<T> {
   }
 }
 
-describe("Scientist", function () {
-  it("should expose a .science method", function () {
+describe("Scientist", () => {
+  it("should expose a .science method", () => {
     const s = new Scientist();
     assert.ok(s.science);
   });
 
-  describe(".science", function () {
-    it("should return an experiment", function () {
+  describe(".science", () => {
+    it("should return an experiment", () => {
       const s = new Scientist();
       assert.instanceOf(s.science("test"), Experiment);
     });
 
-    it.skip("should be able to replace the experiment", function () {
+    it.skip("should be able to replace the experiment", () => {
       const s = new Scientist();
       assert.instanceOf(s.science("test", { Experiment: MyExp }), MyExp);
     });

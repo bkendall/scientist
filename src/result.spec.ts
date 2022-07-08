@@ -9,7 +9,7 @@ import { Observation } from "./observation";
 
 import { Result, create as createResult } from "./result";
 
-describe("Result", function () {
+describe("Result", () => {
   let result: Result<unknown>;
   let evaluateCandidatesStub: sinon.SinonStub;
   const mockContext = { zip: "zap" };
@@ -22,134 +22,134 @@ describe("Result", function () {
   const mockControl = new Observation("control", mockExperiment, () => false);
   let timers: sinon.SinonFakeTimers;
 
-  beforeEach(function () {
+  beforeEach(() => {
     timers = sinon.useFakeTimers();
     evaluateCandidatesStub = sinon.stub(Result.prototype, "evaluateCandidates");
   });
 
-  afterEach(function () {
+  afterEach(() => {
     timers.restore();
     evaluateCandidatesStub.restore();
   });
 
-  describe("create", function () {
-    it("should return a new Result", function () {
+  describe("create", () => {
+    it("should return a new Result", () => {
       const r = createResult(mockExperiment, mockObservations, mockControl);
       assert.instanceOf(r, Result);
     });
   });
 
-  describe("context", function () {
-    it("should return the experiment context", function () {
+  describe("context", () => {
+    it("should return the experiment context", () => {
       result = createResult(mockExperiment, mockObservations, mockControl);
       assert.deepEqual(result.context(), mockExperiment.context());
       assert.deepEqual(result.context(), mockContext);
     });
   });
 
-  describe("experimentName", function () {
-    it("should return the experiment name", function () {
+  describe("experimentName", () => {
+    it("should return the experiment name", () => {
       result = createResult(mockExperiment, mockObservations, mockControl);
       assert.deepEqual(result.experimentName(), "foobar");
     });
   });
 
-  describe("matched", function () {
-    it("should return true if all of the results matched", function () {
+  describe("matched", () => {
+    it("should return true if all of the results matched", () => {
       result = createResult(mockExperiment, mockObservations, mockControl);
       assert.ok(result.matched());
     });
 
-    describe("with mismatched results", function () {
-      beforeEach(function () {
+    describe("with mismatched results", () => {
+      beforeEach(() => {
         result = createResult(mockExperiment, mockObservations, mockControl);
         result._mismatched = result._mismatched.push(
           new Observation("??", mockExperiment, () => false)
         );
       });
 
-      it("should return false", function () {
+      it("should return false", () => {
         assert.notOk(result.matched());
       });
     });
   });
 
-  describe("mismatched", function () {
-    beforeEach(function () {
+  describe("mismatched", () => {
+    beforeEach(() => {
       result = createResult(mockExperiment, mockObservations, mockControl);
     });
 
-    describe("with mismatched candidates", function () {
-      beforeEach(function () {
+    describe("with mismatched candidates", () => {
+      beforeEach(() => {
         result._mismatched = result._mismatched.push(
           new Observation("??", mockExperiment, () => false)
         );
       });
 
-      it("should return true", function () {
+      it("should return true", () => {
         assert.ok(result.mismatched());
       });
     });
 
-    describe("with no mismatched candidates", function () {
-      it("should return false", function () {
+    describe("with no mismatched candidates", () => {
+      it("should return false", () => {
         assert.notOk(result.mismatched());
       });
     });
   });
 
-  describe("ignored", function () {
-    beforeEach(function () {
+  describe("ignored", () => {
+    beforeEach(() => {
       result = createResult(mockExperiment, mockObservations, mockControl);
     });
 
-    describe("with no ignored candidates", function () {
-      it("should return false", function () {
+    describe("with no ignored candidates", () => {
+      it("should return false", () => {
         assert.notOk(result.ignored());
       });
     });
 
-    describe("with ignored candidates", function () {
-      beforeEach(function () {
+    describe("with ignored candidates", () => {
+      beforeEach(() => {
         result._ignored = result._ignored.push(
           new Observation("??", mockExperiment, () => false)
         );
       });
 
-      it("should return true", function () {
+      it("should return true", () => {
         assert.ok(result.ignored());
       });
     });
   });
 
-  describe("evaluateCandidates", function () {
-    beforeEach(function () {
+  describe("evaluateCandidates", () => {
+    beforeEach(() => {
       evaluateCandidatesStub.restore();
     });
-    afterEach(function () {
+    afterEach(() => {
       evaluateCandidatesStub = sinon.stub(
         Result.prototype,
         "evaluateCandidates"
       );
     });
 
-    describe("should collect all equivalent observations", function () {
-      beforeEach(function () {
+    describe("should collect all equivalent observations", () => {
+      beforeEach(() => {
         mockExperiment.observationsAreEquivalent = sinon.stub().returns(true);
         result = createResult(mockExperiment, mockObservations, mockControl);
       });
 
-      it("should leave _mismatched empty", function () {
+      it("should leave _mismatched empty", () => {
         assert.equal(result._mismatched.size, 0);
       });
 
-      it("should not ignore any", function () {
+      it("should not ignore any", () => {
         assert.equal(result._ignored.size, 0);
       });
     });
 
-    describe("should collect all mismatched observations", function () {
-      beforeEach(function () {
+    describe("should collect all mismatched observations", () => {
+      beforeEach(() => {
         mockExperiment.observationsAreEquivalent = sinon.stub().returns(false);
         mockExperiment.ignoreMismatchedObservation = sinon
           .stub()
@@ -157,7 +157,7 @@ describe("Result", function () {
         result = createResult(mockExperiment, mockObservations, mockControl);
       });
 
-      it.skip("should populate _mismatched", function () {
+      it.skip("should populate _mismatched", () => {
         assert.equal(result._mismatched.size, 1);
         assert.deepEqual(
           result._mismatched.first(),
@@ -165,23 +165,23 @@ describe("Result", function () {
         );
       });
 
-      it("should not ignore any", function () {
+      it("should not ignore any", () => {
         assert.equal(result._ignored.size, 0);
       });
     });
 
-    describe("should collect all mismatched and ignored observations", function () {
-      beforeEach(function () {
+    describe("should collect all mismatched and ignored observations", () => {
+      beforeEach(() => {
         mockExperiment.observationsAreEquivalent = sinon.stub().returns(false);
         mockExperiment.ignoreMismatchedObservation = sinon.stub().returns(true);
         result = createResult(mockExperiment, mockObservations, mockControl);
       });
 
-      it("should not populate _mismatched (goes to ignored)", function () {
+      it("should not populate _mismatched (goes to ignored)", () => {
         assert.equal(result._mismatched.size, 0);
       });
 
-      it.skip("should ignore them as well", function () {
+      it.skip("should ignore them as well", () => {
         assert.equal(result._ignored.size, 1);
         assert.deepEqual(
           result._ignored.first(),

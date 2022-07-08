@@ -25,8 +25,8 @@ function clone(o: unknown): unknown {
   return Object.assign({}, o);
 }
 
-describe("Result", function () {
-  it("should return equivalent results regardless of order", function () {
+describe("Result", () => {
+  it("should return equivalent results regardless of order", () => {
     const o1 = [
       clone(mockObservationOne),
       clone(mockObservationTwo),

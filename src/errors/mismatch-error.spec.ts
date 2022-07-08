@@ -5,13 +5,13 @@ const assert = chai.assert;
 
 import { MismatchError } from "./mismatch-error";
 
-describe("MismatchError", function () {
-  it("should set the message as passed to it", function () {
+describe("MismatchError", () => {
+  it("should set the message as passed to it", () => {
     const e = new MismatchError("foobar");
     assert.equal(e.message, "foobar");
   });
 
-  it("should store a result object", function () {
+  it("should store a result object", () => {
     const o = { foo: "bar" };
     const e = new MismatchError("foobar", o);
     assert.deepEqual(e.result, o);

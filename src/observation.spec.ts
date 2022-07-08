@@ -8,39 +8,39 @@ import * as sinon from "sinon";
 
 import { Observation, create as createObservation } from "./observation";
 
-describe("Observation", function () {
+describe("Observation", () => {
   const mockExperiment = new Experiment();
   let testFn: sinon.SinonStub;
 
-  beforeEach(function () {
+  beforeEach(() => {
     testFn = sinon.stub().returns(5);
     mockExperiment.cleanValue = sinon.stub().returnsArg(0);
   });
 
-  describe("create", function () {
-    it("should return a promse resolving in an observation", function () {
+  describe("create", () => {
+    it("should return a promse resolving in an observation", () => {
       function runThis() {
         return Promise.resolve().then(testFn);
       }
       return assert
         .isFulfilled(createObservation("foo", mockExperiment, runThis))
-        .then(function (observation) {
+        .then((observation) => {
           assert.instanceOf(observation, Observation);
         });
     });
 
-    it("should run the given test function", function () {
+    it("should run the given test function", () => {
       function runThis() {
         return Promise.resolve().then(testFn);
       }
       return assert
         .isFulfilled(createObservation("foo", mockExperiment, runThis))
-        .then(function () {
+        .then(() => {
           sinon.assert.calledOnce(testFn);
         });
     });
 
-    it("should record the value", function () {
+    it("should record the value", () => {
       function runThis() {
         return Promise.resolve().then(testFn);
       }
@@ -51,9 +51,9 @@ describe("Observation", function () {
       // });
     });
 
-    it("should record a duration", function () {
+    it("should record a duration", () => {
       function runThis() {
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
           setTimeout(resolve, 5);
         });
       }
@@ -65,7 +65,7 @@ describe("Observation", function () {
       // });
     });
 
-    it("should record an exception, if thrown", function () {
+    it("should record an exception, if thrown", () => {
       const error = new Error("foobar");
       function runThis() {
         return Promise.reject(error);
@@ -79,8 +79,8 @@ describe("Observation", function () {
     });
   });
 
-  describe("cleanedValue", function () {
-    it("should clean the stored value", function () {
+  describe("cleanedValue", () => {
+    it("should clean the stored value", () => {
       function runThis() {
         return Promise.resolve().then(testFn);
       }
@@ -95,7 +95,7 @@ describe("Observation", function () {
       // });
     });
 
-    it("should return undfined if no value", function () {
+    it("should return undfined if no value", () => {
       function runThis() {
         return Promise.resolve().then(testFn);
       }
@@ -111,8 +111,8 @@ describe("Observation", function () {
     });
   });
 
-  describe("raised", function () {
-    it("should return true if there was an exception", function () {
+  describe("raised", () => {
+    it("should return true if there was an exception", () => {
       const error = new Error("foobar");
       function runThis() {
         return Promise.reject(error);
@@ -125,7 +125,7 @@ describe("Observation", function () {
       // });
     });
 
-    it("should return false if there was no exception", function () {
+    it("should return false if there was no exception", () => {
       function runThis() {
         return Promise.resolve(5);
       }
@@ -138,7 +138,7 @@ describe("Observation", function () {
     });
   });
 
-  describe("equivalent_to", function () {
+  describe("equivalent_to", () => {
     let observation: Observation<unknown>;
     let equalObservation: Observation<unknown>;
     let notEqualObservation: Observation<unknown>;
@@ -148,71 +148,65 @@ describe("Observation", function () {
     const error = new Error("foobar");
     const otherError = new Error("asdf");
 
-    beforeEach(function () {
+    beforeEach(() => {
       return Promise.resolve()
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.resolve(5);
           }
-          return createObservation("foo", mockExperiment, runThis).then(
-            function (o) {
-              observation = o;
-            }
-          );
+          return createObservation("foo", mockExperiment, runThis).then((o) => {
+            observation = o;
+          });
         })
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.resolve(5);
           }
-          return createObservation("bar", mockExperiment, runThis).then(
-            function (o) {
-              equalObservation = o;
-            }
-          );
+          return createObservation("bar", mockExperiment, runThis).then((o) => {
+            equalObservation = o;
+          });
         })
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.resolve(6);
           }
-          return createObservation("baz", mockExperiment, runThis).then(
-            function (o) {
-              notEqualObservation = o;
-            }
-          );
+          return createObservation("baz", mockExperiment, runThis).then((o) => {
+            notEqualObservation = o;
+          });
         })
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.reject(error);
           }
           return createObservation("nope", mockExperiment, runThis).then(
-            function (o) {
+            (o) => {
               throwsObservation = o;
             }
           );
         })
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.reject(error);
           }
           return createObservation("alsono", mockExperiment, runThis).then(
-            function (o) {
+            (o) => {
               equalThrowsObservation = o;
             }
           );
         })
-        .then(function () {
+        .then(() => {
           function runThis() {
             return Promise.reject(otherError);
           }
           return createObservation("nonono", mockExperiment, runThis).then(
-            function (o) {
+            (o) => {
               notEqualThrowsObservation = o;
             }
           );
         });
     });
 
-    it("should return false if passed not an Observation", function () {
+    it("should return false if passed not an Observation", () => {
       assert.notOk(
         observation.equivalentTo({} as Observation<unknown>),
         "object is invalid"
@@ -227,8 +221,8 @@ describe("Observation", function () {
       );
     });
 
-    describe("with no exceptions", function () {
-      it("should return true if compared with equivalent Observation value", function () {
+    describe("with no exceptions", () => {
+      it("should return true if compared with equivalent Observation value", () => {
         assert.ok(observation.equivalentTo(observation), "equal to self");
         assert.ok(
           observation.equivalentTo(equalObservation),
@@ -236,7 +230,7 @@ describe("Observation", function () {
         );
       });
 
-      it("should return false if compared with non equivalent Observation value", function () {
+      it("should return false if compared with non equivalent Observation value", () => {
         assert.notOk(
           observation.equivalentTo(notEqualObservation),
           "not equal to other"
@@ -244,8 +238,8 @@ describe("Observation", function () {
       });
     });
 
-    describe("when exceptions are thrown", function () {
-      it("should return true if compared with equivalent Observation error", function () {
+    describe("when exceptions are thrown", () => {
+      it("should return true if compared with equivalent Observation error", () => {
         assert.ok(
           throwsObservation.equivalentTo(throwsObservation),
           "equal to self"
@@ -256,14 +250,14 @@ describe("Observation", function () {
         );
       });
 
-      it("should return false if compared with non equivalent Observation error", function () {
+      it("should return false if compared with non equivalent Observation error", () => {
         assert.notOk(
           throwsObservation.equivalentTo(notEqualThrowsObservation),
           "not equal to other"
         );
       });
 
-      it("should return false if compared with Observation with no error", function () {
+      it("should return false if compared with Observation with no error", () => {
         assert.notOk(
           observation.equivalentTo(throwsObservation),
           "not equal to error"
@@ -275,8 +269,8 @@ describe("Observation", function () {
       });
     });
 
-    describe("when a comparator function is passed", function () {
-      it("should use the comparator to compare the values", function () {
+    describe("when a comparator function is passed", () => {
+      it("should use the comparator to compare the values", () => {
         const compare = sinon.stub().returns(true);
         assert.ok(
           observation.equivalentTo(notEqualObservation, compare),
