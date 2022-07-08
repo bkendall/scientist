@@ -5,12 +5,13 @@
   "main": "dist/scientist.js",
   "scripts": {
     "build": "tsc",
+    "clean": "rimraf dist",
     "coverage": "nyc --reporter=text --reporter=html --check-coverage --lines 100 --functions 100 --branches 100 --statements 100 npm run unit",
     "format": "prettier --write {src,test}/",
     "integration": "mocha 'test/integration/**/*'",
     "lint": "npm run lint:format",
     "lint:format": "eslint {src,test}/",
-    "prepare": "npm run build",
+    "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json",
     "test": "npm run lint && npm run unit && npm run integration",
     "unit": "mocha 'src/**/*.spec.*'"
   },
@@ -18,6 +19,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/bkendall/scientist"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": "^14.18.0 || >=16.4.0"
   },
   "license": "MIT",
   "devDependencies": {
@@ -37,6 +44,7 @@
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
     "sinon": "^14.0.0",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
