@@ -6,14 +6,13 @@
   "scripts": {
     "build": "tsc",
     "coverage": "nyc --reporter=text --reporter=html --check-coverage --lines 100 --functions 100 --branches 100 --statements 100 npm run unit",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "format": "prettier --write {src,test}/",
-    "integration": "mocha test/integration/**/*",
+    "integration": "mocha 'test/integration/**/*'",
     "lint": "npm run lint:format",
     "lint:format": "eslint {src,test}/",
     "prepare": "npm run build",
     "test": "npm run lint && npm run unit && npm run integration",
-    "unit": "mocha test/unit/**/*"
+    "unit": "mocha 'src/**/*.spec.*'"
   },
   "author": "Bryan Kendall <bryan@bryankendall.com>",
   "repository": {

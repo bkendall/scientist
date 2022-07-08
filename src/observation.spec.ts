@@ -1,14 +1,12 @@
 import * as chai from "chai";
 import chaiAsPromised from "chai-as-promised";
-import Experiment from "../../../src/experiment";
+import Experiment from "./experiment";
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
 import * as sinon from "sinon";
 
-import Observation, {
-  create as createObservation,
-} from "../../../src/observation";
+import Observation, { create as createObservation } from "./observation";
 
 describe("Observation", function () {
   const mockExperiment = new Experiment();

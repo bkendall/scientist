@@ -3,9 +3,9 @@ import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import Experiment from "../../../src/experiment";
+import Experiment from "./experiment";
 
-import Scientist from "../../../src/scientist";
+import Scientist from "./scientist";
 
 class MyExp<T> extends Experiment<T> {
   constructor(name: string) {

@@ -6,13 +6,11 @@ const assert = chai.assert;
 import * as sinon from "sinon";
 import * as KnuthShuffle from "knuth-shuffle";
 
-import MismatchError from "../../../src/errors/mismatch-error";
-import Observation, {
-  create as createObservation,
-} from "../../../src/observation";
-import Result, { create as createResult } from "../../../src/result";
+import MismatchError from "./errors/mismatch-error";
+import Observation, { create as createObservation } from "./observation";
+import Result, { create as createResult } from "./result";
 
-import Experiment from "../../../src/experiment";
+import Experiment from "./experiment";
 
 describe("Experiment", function () {
   let experiment: Experiment<any>;
