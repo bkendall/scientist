@@ -56,7 +56,7 @@ class Result<V> {
    * Get the Experiment's context.
    * @return {Object} Experiment's context.
    */
-  context(): Object {
+  context(): unknown {
     debug("context");
     return this.experiment.context();
   }
@@ -103,7 +103,7 @@ class Result<V> {
    * @private
    */
   evaluateCandidates(): void {
-    let mismatched = this.candidates.filter((candidate) => {
+    const mismatched = this.candidates.filter((candidate) => {
       return !this.experiment.observationsAreEquivalent(
         this.control,
         candidate!

@@ -1,34 +1,32 @@
-"use strict";
+import * as chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+const assert = chai.assert;
 
-var chai = require("chai");
-chai.use(require("chai-as-promised"));
-var assert = chai.assert;
+import Experiment from "../../../src/experiment";
 
-var util = require("util");
+import Scientist from "../../../src/scientist";
 
-var Experiment = require("../../../src/experiment").default;
-
-var Scientist = require("../../../src/scientist").default;
-
-function MyExp(name) {
-  Experiment.call(this, name);
+class MyExp<T> extends Experiment<T> {
+  constructor(name: string) {
+    super(name);
+  }
 }
-util.inherits(MyExp, Experiment);
 
 describe("Scientist", function () {
   it("should expose a .science method", function () {
-    var s = new Scientist();
+    const s = new Scientist();
     assert.ok(s.science);
   });
 
   describe(".science", function () {
     it("should return an experiment", function () {
-      var s = new Scientist();
+      const s = new Scientist();
       assert.instanceOf(s.science("test"), Experiment);
     });
 
     it.skip("should be able to replace the experiment", function () {
-      var s = new Scientist();
+      const s = new Scientist();
       assert.instanceOf(s.science("test", { Experiment: MyExp }), MyExp);
     });
   });

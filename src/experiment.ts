@@ -4,7 +4,7 @@ import KnuthShuffle from "knuth-shuffle";
 
 import MismatchError from "./errors/mismatch-error";
 import Observation, { create as createObservation } from "./observation";
-import Result, { create as createResult } from "./result";
+import { create as createResult } from "./result";
 
 const debug = Debug("scientist:experiment");
 
@@ -29,14 +29,14 @@ class Experiment<V> {
   private _behaviors: Map<string, (...rest: Array<any>) => V>;
   private _cleanerFn?: (value: V) => V;
   private _comparator?: (a: Observation<V>, b: Observation<V>) => boolean;
-  private _context: Object;
+  private _context: unknown;
   private _ignores: List<(control: V, observation: V) => boolean>;
   private _raiseOnMismatches: boolean;
   private _runIfFn?: (...rest: Array<any>) => boolean;
   enabled: boolean;
   name: string;
 
-  constructor(name: string = "experiment") {
+  constructor(name = "experiment") {
     debug("constructor");
     this.name = name;
     this.enabled = true;
@@ -46,8 +46,8 @@ class Experiment<V> {
     this._raiseOnMismatches = false;
   }
 
-  publish(result?: Object): Promise<boolean> {
-    debug("publish");
+  publish(result?: unknown): Promise<boolean> {
+    debug("publish", result);
     return Promise.resolve(true);
   }
 
@@ -101,10 +101,10 @@ class Experiment<V> {
    * @param {[Object]} context Extra data to add.
    * @return {Object} Extra experiment data.
    */
-  context(context?: any): Object {
+  context(context?: any): unknown {
     debug("context");
     if (context && isObject(context)) {
-      Object.assign(this._context, context);
+      Object.assign(this._context as any, context);
     }
     return this._context;
   }
@@ -129,15 +129,15 @@ class Experiment<V> {
    * @return {boolean} Returns true if the pair should be ignored.
    */
   ignoreMismatchedObservation(
-    control: Observation<V>,
-    candidate: Observation<V>
+    control?: Observation<V>,
+    candidate?: Observation<V>
   ): boolean {
     debug("ignoreMismatchedObservation");
     if (this._ignores.size === 0) {
       return false;
     }
     return this._ignores.some((fn) =>
-      fn ? fn(control.value!, candidate.value!) : false
+      fn ? fn(control?.value as V, candidate?.value as V) : false
     );
   }
 
@@ -169,7 +169,7 @@ class Experiment<V> {
    * @param {String} name Name of the behavior to run. Default: "control"
    * @return {Object} Result of the control behavior.
    */
-  run(name: string = "control"): Promise<V> {
+  run(name = "control"): Promise<V> {
     debug("run");
     return Promise.resolve().then(() => {
       const controlFunc = this._behaviors.get(name);
@@ -188,7 +188,7 @@ class Experiment<V> {
           }
         })
         .then(() => {
-          let promises: Promise<Observation<V>>[] = [];
+          const promises: Promise<Observation<V>>[] = [];
 
           const shuffle = KnuthShuffle.knuthShuffle;
           shuffle(this._behaviors.keySeq().toArray()).forEach((key: any) => {
@@ -258,7 +258,7 @@ class Experiment<V> {
   }
 
   // FIXME(@bkendall): I dislike this...
-  try(name: string | Function, fn?: Function): void {
+  try(name: string | (() => unknown), fn?: () => unknown): void {
     debug("try");
     if (typeof name === "function") {
       fn = name;
@@ -273,7 +273,7 @@ class Experiment<V> {
     this._behaviors = this._behaviors.set(name, fn as (...rest: any[]) => V);
   }
 
-  use(fn: Function): void {
+  use(fn: () => unknown): void {
     debug("use");
     this.try("control", fn);
   }

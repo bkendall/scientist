@@ -71,7 +71,7 @@ class Observation<V> {
    */
   equivalentTo(
     other: Observation<V>,
-    comparator: (a: V, b: V) => boolean
+    comparator?: (a: V, b: V) => boolean
   ): boolean {
     if (!(other instanceof Observation)) {
       return false;
