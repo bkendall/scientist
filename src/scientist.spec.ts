@@ -1,0 +1,29 @@
+import { assert } from "chai";
+
+import { Experiment } from "./experiment";
+import { Scientist } from "./scientist";
+
+class MyExp<T> extends Experiment<T> {
+  constructor(name: string) {
+    super(name);
+  }
+}
+
+describe("Scientist", () => {
+  it("should expose a .science method", () => {
+    const s = new Scientist();
+    assert.ok(s.science);
+  });
+
+  describe(".science", () => {
+    it("should return an experiment", () => {
+      const s = new Scientist();
+      assert.instanceOf(s.science("test"), Experiment);
+    });
+
+    it("should be able to replace the experiment", () => {
+      const s = new Scientist();
+      assert.instanceOf(s.science("test", { Experiment: MyExp }), MyExp);
+    });
+  });
+});
