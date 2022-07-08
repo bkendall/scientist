@@ -25,7 +25,7 @@ describe("Scientist", () => {
       assert.instanceOf(s.science("test"), Experiment);
     });
 
-    it.skip("should be able to replace the experiment", () => {
+    it("should be able to replace the experiment", () => {
       const s = new Scientist();
       assert.instanceOf(s.science("test", { Experiment: MyExp }), MyExp);
     });
