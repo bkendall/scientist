@@ -6,18 +6,15 @@ export async function create<V>(
   fn: (...rest: Array<unknown>) => Promise<V> | V
 ): Promise<Observation<V>> {
   const observation = new Observation(name, experiment, fn);
-  return Promise.resolve()
-    .then(() => observation.fn())
-    .then((value) => {
-      observation.value = value;
-    })
-    .catch((err) => {
-      observation.exception = err;
-    })
-    .then(() => {
-      observation.duration = Date.now() - observation.now;
-      return observation;
-    });
+  try {
+    const value = await Promise.resolve(observation.fn());
+    observation.value = value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    observation.exception = err;
+  }
+  observation.duration = Date.now() - observation.now;
+  return observation;
 }
 
 export class Observation<V> {

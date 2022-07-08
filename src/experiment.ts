@@ -25,14 +25,14 @@ const isFunction = (f: unknown): boolean => {
 };
 
 export class Experiment<V> {
-  private _beforeRunFn?: (...rest: Array<unknown>) => boolean;
-  private _behaviors: Map<string, (...rest: Array<unknown>) => V>;
-  private _cleanerFn?: (value: V) => V;
-  private _comparator?: (a: Observation<V>, b: Observation<V>) => boolean;
-  private _context: unknown;
-  private _ignores: List<(control: V, observation: V) => boolean>;
-  private _raiseOnMismatches: boolean;
-  private _runIfFn?: (...rest: Array<unknown>) => boolean;
+  private beforeRunFn?: (...rest: Array<unknown>) => boolean;
+  private behaviors: Map<string, (...rest: Array<unknown>) => V>;
+  private cleanerFn?: (value: V) => V;
+  private comparator?: (a: Observation<V>, b: Observation<V>) => boolean;
+  private ignores: List<(control: V, observation: V) => boolean>;
+  private runIfFn?: (...rest: Array<unknown>) => boolean;
+  private savedContext: unknown;
+  private savedRaiseOnMismatches: boolean;
   enabled: boolean;
   name: string;
 
@@ -40,10 +40,10 @@ export class Experiment<V> {
     debug("constructor");
     this.name = name;
     this.enabled = true;
-    this._behaviors = Map();
-    this._context = {};
-    this._ignores = List();
-    this._raiseOnMismatches = false;
+    this.behaviors = Map();
+    this.savedContext = {};
+    this.ignores = List();
+    this.savedRaiseOnMismatches = false;
   }
 
   publish(result?: unknown): Promise<boolean> {
@@ -58,7 +58,7 @@ export class Experiment<V> {
    */
   beforeRun(fn: () => boolean) {
     debug("beforeRun");
-    this._beforeRunFn = fn;
+    this.beforeRunFn = fn;
   }
 
   /**
@@ -68,7 +68,7 @@ export class Experiment<V> {
    */
   clean(fn: (value: V) => V): void {
     debug("clean");
-    this._cleanerFn = fn;
+    this.cleanerFn = fn;
   }
 
   /**
@@ -79,8 +79,8 @@ export class Experiment<V> {
    */
   cleanValue(value: V): V {
     debug("cleanValue");
-    if (this._cleanerFn && isFunction(this._cleanerFn)) {
-      return this._cleanerFn(value);
+    if (this.cleanerFn && isFunction(this.cleanerFn)) {
+      return this.cleanerFn(value);
     } else {
       return value;
     }
@@ -93,7 +93,7 @@ export class Experiment<V> {
    */
   compare(fn: (a: Observation<V>, b: Observation<V>) => boolean): void {
     debug("compare");
-    this._comparator = fn;
+    this.comparator = fn;
   }
 
   /**
@@ -104,9 +104,9 @@ export class Experiment<V> {
   context(context?: unknown): unknown {
     debug("context");
     if (context && isObject(context)) {
-      this._context = Object.assign({}, this._context, context);
+      this.savedContext = Object.assign({}, this.savedContext, context);
     }
-    return this._context;
+    return this.savedContext;
   }
 
   /**
@@ -117,7 +117,7 @@ export class Experiment<V> {
    */
   ignore(fn: (control: V, observation: V) => boolean): void {
     debug("ignore");
-    this._ignores = this._ignores.push(fn);
+    this.ignores = this.ignores.push(fn);
   }
 
   /**
@@ -133,10 +133,10 @@ export class Experiment<V> {
     candidate?: Observation<V>
   ): boolean {
     debug("ignoreMismatchedObservation");
-    if (this._ignores.size === 0) {
+    if (this.ignores.size === 0) {
       return false;
     }
-    return this._ignores.some((fn) =>
+    return this.ignores.some((fn) =>
       fn ? fn(control?.value as V, candidate?.value as V) : false
     );
   }
@@ -153,8 +153,8 @@ export class Experiment<V> {
     candidate: Observation<V>
   ): boolean {
     debug("observationsAreEquivalent");
-    if (this._comparator && isFunction(this._comparator)) {
-      return this._comparator(control, candidate);
+    if (this.comparator && isFunction(this.comparator)) {
+      return this.comparator(control, candidate);
     } else {
       const sameValues = control.value === candidate.value;
       const sameException = control.exception === candidate.exception;
@@ -171,7 +171,7 @@ export class Experiment<V> {
    */
   async run(name = "control"): Promise<V> {
     debug("run");
-    const controlFunc = this._behaviors.get(name);
+    const controlFunc = this.behaviors.get(name);
     if (!isFunction(controlFunc)) {
       throw new Error(`${name} behavior is missing.`);
     }
@@ -180,15 +180,15 @@ export class Experiment<V> {
       return controlFunc();
     }
 
-    if (this._beforeRunFn && isFunction(this._beforeRunFn)) {
-      this._beforeRunFn();
+    if (this.beforeRunFn && isFunction(this.beforeRunFn)) {
+      this.beforeRunFn();
     }
 
     const promises: Promise<Observation<V>>[] = [];
 
     const shuffle = KnuthShuffle.knuthShuffle;
-    shuffle(this._behaviors.keySeq().toArray()).forEach((key) => {
-      const fn = this._behaviors.get(key);
+    shuffle(this.behaviors.keySeq().toArray()).forEach((key) => {
+      const fn = this.behaviors.get(key);
       if (!fn) {
         throw new Error("Cannot create observation without fn");
       }
@@ -222,7 +222,7 @@ export class Experiment<V> {
    */
   runIf(fn: () => boolean): void {
     debug("runIf");
-    this._runIfFn = fn;
+    this.runIfFn = fn;
   }
 
   /**
@@ -232,7 +232,7 @@ export class Experiment<V> {
    */
   runIfFuncAllows(): boolean {
     debug("runIfFuncAllows");
-    return this._runIfFn && isFunction(this._runIfFn) ? this._runIfFn() : true;
+    return this.runIfFn && isFunction(this.runIfFn) ? this.runIfFn() : true;
   }
 
   /**
@@ -241,7 +241,7 @@ export class Experiment<V> {
    */
   shouldExperimentRun(): boolean {
     debug("shouldExperimentRun");
-    return this._behaviors.size > 1 && this.enabled && this.runIfFuncAllows();
+    return this.behaviors.size > 1 && this.enabled && this.runIfFuncAllows();
   }
 
   /**
@@ -250,7 +250,7 @@ export class Experiment<V> {
    */
   raiseOnMismatches(): boolean {
     debug("raiseOnMismatches");
-    return !!this._raiseOnMismatches;
+    return !!this.savedRaiseOnMismatches;
   }
 
   // FIXME(@bkendall): I dislike this...
@@ -260,16 +260,13 @@ export class Experiment<V> {
       fn = name;
       name = "candidate";
     }
-    if (this._behaviors.has(name)) {
+    if (this.behaviors.has(name)) {
       throw new Error(`Name (${name}) is not unique for behavior`);
     }
     if (typeof fn !== "function") {
       throw new Error(".try: Function is not a function.");
     }
-    this._behaviors = this._behaviors.set(
-      name,
-      fn as (...rest: unknown[]) => V
-    );
+    this.behaviors = this.behaviors.set(name, fn as (...rest: unknown[]) => V);
   }
 
   use(fn: () => unknown): void {
