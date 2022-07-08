@@ -1,8 +1,8 @@
 import { List } from "immutable";
 import Debug from "debug";
 
-import Experiment from "./experiment";
-import Observation from "./observation";
+import { Experiment } from "./experiment";
+import { Observation } from "./observation";
 
 const debug = Debug("scientist:result");
 
@@ -23,7 +23,7 @@ export function create<V>(
   return new Result(experiment, observations, control);
 }
 
-class Result<V> {
+export class Result<V> {
   _ignored: List<Observation<V>>;
   _mismatched: List<Observation<V>>;
   candidates: List<Observation<V>>;
@@ -123,5 +123,3 @@ class Result<V> {
     });
   }
 }
-
-export default Result;

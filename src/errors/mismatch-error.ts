@@ -1,4 +1,4 @@
-class MismatchError<T> extends Error {
+export class MismatchError<T> extends Error {
   result?: T;
 
   constructor(message: string, result?: T) {
@@ -6,5 +6,3 @@ class MismatchError<T> extends Error {
     this.result = result;
   }
 }
-
-export default MismatchError;

@@ -5,9 +5,9 @@ const assert = chai.assert;
 
 import * as sinon from "sinon";
 
-import Experiment from "../../src/experiment";
+import { Experiment } from "../../src/experiment";
 
-import Result from "../../src/result";
+import { Result } from "../../src/result";
 
 const mockExperiment = new Experiment<unknown>();
 sinon.stub(mockExperiment, "observationsAreEquivalent").returns(false);

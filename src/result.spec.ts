@@ -4,10 +4,10 @@ chai.use(chaiAsPromised);
 const assert = chai.assert;
 
 import * as sinon from "sinon";
-import Experiment from "./experiment";
-import Observation from "./observation";
+import { Experiment } from "./experiment";
+import { Observation } from "./observation";
 
-import Result, { create as createResult } from "./result";
+import { Result, create as createResult } from "./result";
 
 describe("Result", function () {
   let result: Result<unknown>;

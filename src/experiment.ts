@@ -2,8 +2,8 @@ import { List, Map } from "immutable";
 import Debug from "debug";
 import KnuthShuffle from "knuth-shuffle";
 
-import MismatchError from "./errors/mismatch-error";
-import Observation, { create as createObservation } from "./observation";
+import { MismatchError } from "./errors/mismatch-error";
+import { Observation, create as createObservation } from "./observation";
 import { create as createResult } from "./result";
 
 const debug = Debug("scientist:experiment");
@@ -24,7 +24,7 @@ const isFunction = (f: any): boolean => {
   return typeof f === "function";
 };
 
-class Experiment<V> {
+export class Experiment<V> {
   private _beforeRunFn?: (...rest: Array<any>) => boolean;
   private _behaviors: Map<string, (...rest: Array<any>) => V>;
   private _cleanerFn?: (value: V) => V;
@@ -278,5 +278,3 @@ class Experiment<V> {
     this.try("control", fn);
   }
 }
-
-export default Experiment;

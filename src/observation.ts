@@ -1,4 +1,4 @@
-import Experiment from "./experiment";
+import { Experiment } from "./experiment";
 
 export function create<V>(
   name: string,
@@ -20,7 +20,7 @@ export function create<V>(
     });
 }
 
-class Observation<V> {
+export class Observation<V> {
   duration?: number;
   exception?: Error;
   experiment: Experiment<V>;
@@ -98,5 +98,3 @@ class Observation<V> {
     );
   }
 }
-
-export default Observation;

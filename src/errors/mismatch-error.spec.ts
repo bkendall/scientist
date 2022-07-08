@@ -3,7 +3,7 @@ import chaiAsPromised from "chai-as-promised";
 chai.use(chaiAsPromised);
 const assert = chai.assert;
 
-import MismatchError from "./mismatch-error";
+import { MismatchError } from "./mismatch-error";
 
 describe("MismatchError", function () {
   it("should set the message as passed to it", function () {

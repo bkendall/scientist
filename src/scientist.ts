@@ -1,19 +1,13 @@
-import ExperimentPkg from "./experiment";
+import { Experiment } from "./experiment";
 
-class Scientist {
-  static Experiment: typeof ExperimentPkg;
-
+export class Scientist {
   science(
     name: string,
-    opts: { Experiment?: typeof ExperimentPkg } = {}
-  ): ExperimentPkg<unknown> {
-    const Type = opts.Experiment || ExperimentPkg;
+    opts: { Experiment?: typeof Experiment } = {}
+  ): Experiment<unknown> {
+    const Type = opts.Experiment || Experiment;
     const experiment = new Type(name);
     experiment.context({});
     return experiment;
   }
 }
-
-Scientist.Experiment = ExperimentPkg;
-
-export default Scientist;
