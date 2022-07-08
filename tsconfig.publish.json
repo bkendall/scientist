@@ -5,6 +5,7 @@
     "sourceMap": false
   },
   "exclude": [
-    "**/*.spec.*"
+    "**/*.spec.*",
+    "test/**/*"
   ]
 }

@@ -10,7 +10,7 @@
     "format": "prettier --write {src,test}/",
     "integration": "mocha 'test/integration/**/*'",
     "lint": "npm run lint:format",
-    "lint:format": "eslint {src,test}/",
+    "lint:format": "eslint '{src,test}/**/*'",
     "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json",
     "test": "npm run lint && npm run unit && npm run integration",
     "unit": "mocha 'src/**/*.spec.*'"
