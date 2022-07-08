@@ -7,10 +7,10 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "coverage": "nyc --reporter=text --reporter=html --reporter=lcov npm run unit",
-    "format": "prettier --write {src,test,examples}/",
+    "format": "prettier --write {src,test,examples,README.md}/",
     "integration": "mocha 'test/integration/**/*'",
     "lint": "npm run lint:format",
-    "lint:format": "eslint '{src,test,examples}/**/*'",
+    "lint:format": "eslint '{src,test,examples,README.md}/**/*'",
     "prepare": "npm run clean && npm run build -- --build tsconfig.publish.json",
     "test": "npm run lint && npm run unit && npm run integration",
     "unit": "mocha 'src/**/*.spec.*'"

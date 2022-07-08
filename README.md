@@ -1,6 +1,7 @@
 # Scientist
 
 <!-- [![Coverage Status](https://img.shields.io/coveralls/Runnable/scientist/master.svg?style=flat-square)](https://coveralls.io/github/Runnable/scientist?branch=master) -->
+
 [![NPM Version](https://img.shields.io/npm/v/node-scientist.svg?style=flat-square)](https://www.npmjs.com/package/node-scientist)
 
 A Javascript library for carefully refactoring critical paths. Influenced heavily from [github/scientist](https://github.com/github/scientist).
@@ -105,7 +106,7 @@ This publisher is used like so:
 
 ```typescript
 // as the first case, with just an Experiment:
-const experiment = new MyExperiment('foobar')
+const experiment = new MyExperiment("foobar");
 ```
 
 <!-- ```typescript
