@@ -1,12 +1,8 @@
-import * as chai from "chai";
-import chaiAsPromised from "chai-as-promised";
-chai.use(chaiAsPromised);
-const assert = chai.assert;
-
+import { assert } from "chai";
 import * as sinon from "sinon";
+
 import { Experiment } from "./experiment";
 import { Observation } from "./observation";
-
 import { Result, create as createResult } from "./result";
 
 describe("Result", () => {

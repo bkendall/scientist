@@ -24,8 +24,8 @@ export function create<V>(
 }
 
 export class Result<V> {
-  _ignored: List<Observation<V>>;
-  _mismatched: List<Observation<V>>;
+  private ignoredList: List<Observation<V>>;
+  private mismatchedList: List<Observation<V>>;
   candidates: List<Observation<V>>;
   control: Observation<V>;
   experiment: Experiment<V>;
@@ -46,8 +46,8 @@ export class Result<V> {
       this.candidates.filterNot((c) => c?.name === "control")
     );
 
-    this._mismatched = List();
-    this._ignored = List();
+    this.mismatchedList = List();
+    this.ignoredList = List();
 
     this.evaluateCandidates();
   }
@@ -76,7 +76,7 @@ export class Result<V> {
    */
   matched(): boolean {
     debug("matched");
-    return this._mismatched.size === 0 && !this.ignored();
+    return this.mismatchedList.size === 0 && !this.ignored();
   }
 
   /**
@@ -85,7 +85,7 @@ export class Result<V> {
    */
   mismatched(): boolean {
     debug("mismatched");
-    return this._mismatched.size > 0;
+    return this.mismatchedList.size > 0;
   }
 
   /**
@@ -94,7 +94,7 @@ export class Result<V> {
    */
   ignored(): boolean {
     debug("ignored");
-    return this._ignored.size > 0;
+    return this.ignoredList.size > 0;
   }
 
   /**
@@ -116,9 +116,9 @@ export class Result<V> {
         candidate
       );
       if (ignore) {
-        this._ignored = this._ignored.push(candidate);
+        this.ignoredList = this.ignoredList.push(candidate);
       } else {
-        this._mismatched = this._mismatched.push(candidate);
+        this.mismatchedList = this.mismatchedList.push(candidate);
       }
     });
   }

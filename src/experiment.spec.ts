@@ -1,8 +1,4 @@
-import * as chai from "chai";
-import chaiAsPromised from "chai-as-promised";
-chai.use(chaiAsPromised);
-const assert = chai.assert;
-
+import { assert } from "chai";
 import * as sinon from "sinon";
 
 import * as observation from "./observation";

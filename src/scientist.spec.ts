@@ -1,10 +1,6 @@
-import * as chai from "chai";
-import chaiAsPromised from "chai-as-promised";
-chai.use(chaiAsPromised);
-const assert = chai.assert;
+import { assert } from "chai";
 
 import { Experiment } from "./experiment";
-
 import { Scientist } from "./scientist";
 
 class MyExp<T> extends Experiment<T> {
