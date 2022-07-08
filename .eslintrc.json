@@ -14,7 +14,10 @@
   ],
   "overrides": [
     {
-      "files": ["test/**/*"],
+      "files": [
+        "test/**/*",
+        "**/*.spec.*"
+      ],
       "env": {
         "mocha": true
       }
