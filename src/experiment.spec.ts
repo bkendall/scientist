@@ -348,7 +348,7 @@ describe("Experiment", () => {
 
       it("should check if the experiment can be run", async () => {
         await assert.isFulfilled(experiment.run());
-        await sinon.assert.calledOnce(shouldExperimentRunStub);
+        sinon.assert.calledOnce(shouldExperimentRunStub);
       });
 
       it("should not run if the experiment should not be run", async () => {

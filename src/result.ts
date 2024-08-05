@@ -1,10 +1,10 @@
 import { List } from "immutable";
-import Debug from "debug";
+import debugPkg from "debug";
 
 import { Experiment } from "./experiment.js";
 import { Observation } from "./observation.js";
 
-const debug = Debug("scientist:result");
+const debug = debugPkg("scientist:result");
 
 /**
  * Create a new Result.
@@ -41,13 +41,14 @@ export class Result<V> {
     this.observations = observations;
     this.control = control;
 
-    this.candidates = List(observations);
+    this.candidates = List(observations); // eslint-disable-line new-cap
+    // eslint-disable-next-line new-cap
     this.candidates = List(
       this.candidates.filterNot((c) => c?.name === "control"),
     );
 
-    this.mismatchedList = List();
-    this.ignoredList = List();
+    this.mismatchedList = List(); // eslint-disable-line new-cap
+    this.ignoredList = List(); // eslint-disable-line new-cap
 
     this.evaluateCandidates();
   }

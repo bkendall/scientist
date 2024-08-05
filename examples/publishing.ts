@@ -1,4 +1,4 @@
-import { Experiment, Result } from "../src";
+import { Experiment, Result } from "../src/index.js";
 
 class MyExperiment<V> extends Experiment<V> {
   constructor(name: string) {
@@ -53,4 +53,4 @@ async function main() {
   await experiment.run();
 }
 
-main();
+void main();

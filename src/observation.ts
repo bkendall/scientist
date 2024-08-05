@@ -11,7 +11,7 @@ export async function create<V>(
     observation.value = value;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    observation.exception = err;
+    observation.exception = err; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
   }
   observation.duration = Date.now() - observation.now;
   return observation;

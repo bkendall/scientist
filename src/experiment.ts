@@ -1,12 +1,12 @@
 import { List, Map } from "immutable";
-import Debug from "debug";
+import debugPkg from "debug";
 import KnuthShuffle from "knuth-shuffle";
 
 import { MismatchError } from "./errors/mismatch-error.js";
 import { Observation, create as createObservation } from "./observation.js";
 import { create as createResult } from "./result.js";
 
-const debug = Debug("scientist:experiment");
+const debug = debugPkg("scientist:experiment");
 
 const isObject = (val: unknown): boolean => {
   return (
@@ -40,9 +40,9 @@ export class Experiment<V> {
     debug("constructor");
     this.name = name;
     this.enabled = true;
-    this.behaviors = Map();
+    this.behaviors = Map(); // eslint-disable-line new-cap
     this.savedContext = {};
-    this.ignores = List();
+    this.ignores = List(); // eslint-disable-line new-cap
     this.savedRaiseOnMismatches = false;
   }
 
@@ -209,7 +209,7 @@ export class Experiment<V> {
       throw new MismatchError(name, result);
     }
     if (control.raised()) {
-      throw control.exception;
+      throw control.exception; // eslint-disable-line @typescript-eslint/only-throw-error
     } else {
       return control.value as V;
     }

@@ -12,7 +12,7 @@ class MyExp<T> extends Experiment<T> {
 describe("Scientist", () => {
   it("should expose a .science method", () => {
     const s = new Scientist();
-    assert.ok(s.science);
+    assert.isFunction(s.science); // eslint-disable-line @typescript-eslint/unbound-method
   });
 
   describe(".science", () => {

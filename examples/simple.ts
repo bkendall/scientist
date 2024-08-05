@@ -1,4 +1,4 @@
-import { Experiment } from "../src";
+import { Experiment } from "../src/index.js";
 
 const experiment = new Experiment<boolean>("getData");
 // use: the control. value will be returned by `.run`.
@@ -10,7 +10,7 @@ experiment.try(async () => {
   return await new Promise((resolve) => setTimeout(() => resolve(true), 10));
 });
 // run: run the experiment.
-experiment.run().then((result) => {
+void experiment.run().then((result) => {
   // result === true, from `.use`.
   console.log(result);
 });
