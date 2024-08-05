@@ -1,7 +1,5 @@
 {
-  "require": ["ts-node/register", "test/mocha-bootstrap.ts"],
-  "extensions": ["ts", "js"],
-  "reporter": "spec",
-  "recursive": true,
-  "watch-files": ["src"]
+  "loader": "ts-node/esm",
+  "require": ["test/mocha-bootstrap.ts"],
+  "extensions": ["ts"]
 }

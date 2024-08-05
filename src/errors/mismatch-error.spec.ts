@@ -1,6 +1,6 @@
 import { assert } from "chai";
 
-import { MismatchError } from "./mismatch-error";
+import { MismatchError } from "./mismatch-error.js";
 
 describe("MismatchError", () => {
   it("should set the message as passed to it", () => {

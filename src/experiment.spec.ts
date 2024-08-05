@@ -1,8 +1,8 @@
 import { assert } from "chai";
 import * as sinon from "sinon";
 
-import * as observation from "./observation";
-import { Experiment } from "./experiment";
+import * as observation from "./observation.js";
+import { Experiment } from "./experiment.js";
 
 describe("Experiment", () => {
   let experiment: Experiment<string>;

@@ -1,7 +1,7 @@
 import { assert } from "chai";
 
-import { Experiment } from "./experiment";
-import { Scientist } from "./scientist";
+import { Experiment } from "./experiment.js";
+import { Scientist } from "./scientist.js";
 
 class MyExp<T> extends Experiment<T> {
   constructor(name: string) {

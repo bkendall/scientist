@@ -2,9 +2,9 @@ import { List, Map } from "immutable";
 import Debug from "debug";
 import KnuthShuffle from "knuth-shuffle";
 
-import { MismatchError } from "./errors/mismatch-error";
-import { Observation, create as createObservation } from "./observation";
-import { create as createResult } from "./result";
+import { MismatchError } from "./errors/mismatch-error.js";
+import { Observation, create as createObservation } from "./observation.js";
+import { create as createResult } from "./result.js";
 
 const debug = Debug("scientist:experiment");
 

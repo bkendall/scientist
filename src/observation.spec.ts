@@ -1,8 +1,8 @@
 import { assert } from "chai";
 import * as sinon from "sinon";
 
-import { Experiment } from "./experiment";
-import { Observation, create as createObservation } from "./observation";
+import { Experiment } from "./experiment.js";
+import { Observation, create as createObservation } from "./observation.js";
 
 describe("Observation", () => {
   const mockExperiment = new Experiment();

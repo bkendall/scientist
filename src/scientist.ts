@@ -1,4 +1,4 @@
-import { Experiment } from "./experiment";
+import { Experiment } from "./experiment.js";
 
 export class Scientist {
   science(

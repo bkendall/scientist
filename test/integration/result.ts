@@ -2,8 +2,8 @@ import { assert } from "chai";
 
 import * as sinon from "sinon";
 
-import { Experiment, Result } from "../../src";
-import { Observation } from "../../src/observation";
+import { Experiment, Result } from "../../src/index.js";
+import { Observation } from "../../src/observation.js";
 
 const mockExperiment = new Experiment<unknown>();
 sinon.stub(mockExperiment, "observationsAreEquivalent").returns(false);

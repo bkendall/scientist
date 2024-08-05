@@ -1,8 +1,8 @@
 import { List } from "immutable";
 import Debug from "debug";
 
-import { Experiment } from "./experiment";
-import { Observation } from "./observation";
+import { Experiment } from "./experiment.js";
+import { Observation } from "./observation.js";
 
 const debug = Debug("scientist:result");
 

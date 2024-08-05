@@ -1,3 +1,3 @@
-export { Experiment } from "./experiment";
-export { Result } from "./result";
-export { Scientist } from "./scientist";
+export { Experiment } from "./experiment.js";
+export { Result } from "./result.js";
+export { Scientist } from "./scientist.js";

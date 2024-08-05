@@ -1,9 +1,9 @@
 import { assert } from "chai";
 import * as sinon from "sinon";
 
-import { Experiment } from "./experiment";
-import { Observation } from "./observation";
-import { Result, create as createResult } from "./result";
+import { Experiment } from "./experiment.js";
+import { Observation } from "./observation.js";
+import { Result, create as createResult } from "./result.js";
 
 describe("Result", () => {
   let result: Result<unknown>;

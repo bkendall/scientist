@@ -1,4 +1,4 @@
-import { Experiment } from "./experiment";
+import { Experiment } from "./experiment.js";
 
 export async function create<V>(
   name: string,
