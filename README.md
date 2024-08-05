@@ -88,14 +88,14 @@ class MyExperiment<V> extends Experiment<V> {
     console.log("Results:");
     console.log(
       "Correctness (were the candidates correct?):",
-      !result.mismatched() ? "yes" : "no"
+      !result.mismatched() ? "yes" : "no",
     );
     console.log("Values (control, candidate):", control.value, candidate.value);
     console.log("Candidate Time:", candidate.duration);
     console.log("Control Time:", control.duration);
     console.log(
       "Improvement Time (+larger is better):",
-      (control.duration || 0) - (candidate.duration || 0)
+      (control.duration || 0) - (candidate.duration || 0),
     );
     return Promise.resolve(true);
   }

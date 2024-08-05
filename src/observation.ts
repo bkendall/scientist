@@ -3,7 +3,7 @@ import { Experiment } from "./experiment";
 export async function create<V>(
   name: string,
   experiment: Experiment<V>,
-  fn: (...rest: Array<unknown>) => Promise<V> | V
+  fn: (...rest: Array<unknown>) => Promise<V> | V,
 ): Promise<Observation<V>> {
   const observation = new Observation(name, experiment, fn);
   try {
@@ -29,7 +29,7 @@ export class Observation<V> {
   constructor(
     name: string,
     experiment: Experiment<V>,
-    fn: (...rest: Array<unknown>) => Promise<V> | V
+    fn: (...rest: Array<unknown>) => Promise<V> | V,
   ) {
     this.name = name;
     this.experiment = experiment;
@@ -68,7 +68,7 @@ export class Observation<V> {
    */
   equivalentTo(
     other: Observation<V>,
-    comparator?: (a?: V, b?: V) => boolean
+    comparator?: (a?: V, b?: V) => boolean,
   ): boolean {
     if (!(other instanceof Observation)) {
       return false;

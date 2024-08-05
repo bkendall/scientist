@@ -17,7 +17,7 @@ const debug = Debug("scientist:result");
 export function create<V>(
   experiment: Experiment<V>,
   observations: Array<Observation<V>>,
-  control: Observation<V>
+  control: Observation<V>,
 ): Result<V> {
   debug("create");
   return new Result(experiment, observations, control);
@@ -34,7 +34,7 @@ export class Result<V> {
   constructor(
     experiment: Experiment<V>,
     observations: Array<Observation<V>>,
-    control: Observation<V>
+    control: Observation<V>,
   ) {
     debug("constructor");
     this.experiment = experiment;
@@ -43,7 +43,7 @@ export class Result<V> {
 
     this.candidates = List(observations);
     this.candidates = List(
-      this.candidates.filterNot((c) => c?.name === "control")
+      this.candidates.filterNot((c) => c?.name === "control"),
     );
 
     this.mismatchedList = List();
@@ -113,7 +113,7 @@ export class Result<V> {
     mismatched.forEach((candidate) => {
       const ignore = this.experiment.ignoreMismatchedObservation(
         this.control,
-        candidate
+        candidate,
       );
       if (ignore) {
         this.ignoredList = this.ignoredList.push(candidate);

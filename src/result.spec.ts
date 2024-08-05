@@ -125,7 +125,7 @@ describe("Result", () => {
     afterEach(() => {
       evaluateCandidatesStub = sinon.stub(
         Result.prototype,
-        "evaluateCandidates"
+        "evaluateCandidates",
       );
     });
 

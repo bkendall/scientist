@@ -130,7 +130,7 @@ describe("Experiment", () => {
       it("should return false if no ignore is truthy", () => {
         pass.returns(false);
         assert.notOk(
-          experiment.ignoreMismatchedObservation(control, candidate)
+          experiment.ignoreMismatchedObservation(control, candidate),
         );
       });
     });
@@ -375,7 +375,7 @@ describe("Experiment", () => {
         experiment = new Experiment();
         await assert.isRejected(
           experiment.run(),
-          /control behavior is missing/i
+          /control behavior is missing/i,
         );
       });
 

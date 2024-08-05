@@ -54,7 +54,7 @@ describe("Observation", () => {
         });
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   assert.isAbove(observation.duration, 4);
@@ -67,7 +67,7 @@ describe("Observation", () => {
         return Promise.reject(error);
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   assert.equal(observation.exception, error);
@@ -81,7 +81,7 @@ describe("Observation", () => {
         return Promise.resolve().then(testFn);
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   const value = observation.cleanedValue();
@@ -96,7 +96,7 @@ describe("Observation", () => {
         return Promise.resolve().then(testFn);
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   delete observation.value;
@@ -114,7 +114,7 @@ describe("Observation", () => {
         return Promise.reject(error);
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   assert.equal(observation.raised(), true);
@@ -126,7 +126,7 @@ describe("Observation", () => {
         return Promise.resolve(5);
       }
       return assert.isFulfilled(
-        createObservation("foo", mockExperiment, runThis)
+        createObservation("foo", mockExperiment, runThis),
       );
       // .then(function (observation) {
       //   assert.equal(observation.raised(), false);
@@ -177,7 +177,7 @@ describe("Observation", () => {
           return createObservation("nope", mockExperiment, runThis).then(
             (o) => {
               throwsObservation = o;
-            }
+            },
           );
         })
         .then(() => {
@@ -187,7 +187,7 @@ describe("Observation", () => {
           return createObservation("alsono", mockExperiment, runThis).then(
             (o) => {
               equalThrowsObservation = o;
-            }
+            },
           );
         })
         .then(() => {
@@ -197,7 +197,7 @@ describe("Observation", () => {
           return createObservation("nonono", mockExperiment, runThis).then(
             (o) => {
               notEqualThrowsObservation = o;
-            }
+            },
           );
         });
     });
@@ -205,15 +205,15 @@ describe("Observation", () => {
     it("should return false if passed not an Observation", () => {
       assert.notOk(
         observation.equivalentTo({} as Observation<unknown>),
-        "object is invalid"
+        "object is invalid",
       );
       assert.notOk(
         observation.equivalentTo("foo" as unknown as Observation<unknown>),
-        "string is invalid"
+        "string is invalid",
       );
       assert.notOk(
         observation.equivalentTo(4 as unknown as Observation<unknown>),
-        "number is invalid"
+        "number is invalid",
       );
     });
 
@@ -222,14 +222,14 @@ describe("Observation", () => {
         assert.ok(observation.equivalentTo(observation), "equal to self");
         assert.ok(
           observation.equivalentTo(equalObservation),
-          "equal to equivalent"
+          "equal to equivalent",
         );
       });
 
       it("should return false if compared with non equivalent Observation value", () => {
         assert.notOk(
           observation.equivalentTo(notEqualObservation),
-          "not equal to other"
+          "not equal to other",
         );
       });
     });
@@ -238,29 +238,29 @@ describe("Observation", () => {
       it("should return true if compared with equivalent Observation error", () => {
         assert.ok(
           throwsObservation.equivalentTo(throwsObservation),
-          "equal to self"
+          "equal to self",
         );
         assert.ok(
           throwsObservation.equivalentTo(equalThrowsObservation),
-          "equal to equivalent"
+          "equal to equivalent",
         );
       });
 
       it("should return false if compared with non equivalent Observation error", () => {
         assert.notOk(
           throwsObservation.equivalentTo(notEqualThrowsObservation),
-          "not equal to other"
+          "not equal to other",
         );
       });
 
       it("should return false if compared with Observation with no error", () => {
         assert.notOk(
           observation.equivalentTo(throwsObservation),
-          "not equal to error"
+          "not equal to error",
         );
         assert.notOk(
           throwsObservation.equivalentTo(observation),
-          "not equal to valid"
+          "not equal to valid",
         );
       });
     });
@@ -270,7 +270,7 @@ describe("Observation", () => {
         const compare = sinon.stub().returns(true);
         assert.ok(
           observation.equivalentTo(notEqualObservation, compare),
-          "equal when forced"
+          "equal when forced",
         );
       });
     });

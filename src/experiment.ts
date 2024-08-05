@@ -130,14 +130,14 @@ export class Experiment<V> {
    */
   ignoreMismatchedObservation(
     control?: Observation<V>,
-    candidate?: Observation<V>
+    candidate?: Observation<V>,
   ): boolean {
     debug("ignoreMismatchedObservation");
     if (this.ignores.size === 0) {
       return false;
     }
     return this.ignores.some((fn) =>
-      fn ? fn(control?.value as V, candidate?.value as V) : false
+      fn ? fn(control?.value as V, candidate?.value as V) : false,
     );
   }
 
@@ -150,7 +150,7 @@ export class Experiment<V> {
    */
   observationsAreEquivalent(
     control: Observation<V>,
-    candidate: Observation<V>
+    candidate: Observation<V>,
   ): boolean {
     debug("observationsAreEquivalent");
     if (this.comparator && isFunction(this.comparator)) {
